@@ -1,11 +1,34 @@
 const Bootcamp = require('../models/Bootcamp');
 
-exports.getBootcamps = (req,res,next) =>{
-    res.status(200).json({data:'hi bootcamps get'});
+exports.getBootcamps = async (req,res,next) =>{
+    try{
+        const bootcamps = await Bootcamp.find();
+        if(bootcamps){
+            return res.status(200).json({
+            success: true,
+            count: bootcamps.length,
+            data: bootcamps
+            })
+        }
+        res.status(404).json({success: false})
+    } catch(err){
+        res.status(400).json({error: err});
+    }
 }
 
-exports.getBootcamp = (req,res,next) =>{
-    res.status(200).json({data:`Show bootcamp get ${req.params.id}` });
+exports.getBootcamp = async (req,res,next) =>{
+    try{
+        const bootcamps = await Bootcamp.findById(req.params.id);
+        if(bootcamps){
+            return res.status(200).json({
+            success: true,
+            data: bootcamps
+            })
+        }
+        res.status(404).json({success: false})
+    } catch(err){
+        res.status(400).json({error: err});
+    }
 }
 exports.createBootcamp = async (req,res,next) =>{
     try{
