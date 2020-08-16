@@ -24,10 +24,27 @@ exports.createBootcamp = async (req,res,next) =>{
     }
     
 }
-exports.updateBootcamp = (req,res,next) =>{
-    res.status(200).json({data:`Update bootcamp put ${req.params.id}`});
+exports.updateBootcamp = async (req,res,next) =>{
+    try{
+        const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body);
+        if(bootcamp){
+            return res.status(200).json({data: bootcamp});
+        }
+        res.status(404).json({success: false});
+    } catch(err){
+        res.status(400).json({error: err});
+    }
+    
 }
 
-exports.deleteBootcamp = (req,res,next) =>{
-    res.status(200).json({data:`Delete bootcamp delete ${req.params.id}`});
+exports.deleteBootcamp = async(req,res,next) =>{
+    try{
+        const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+        if(bootcamp){
+            return res.status(200).json({data: bootcamp});
+        }
+        res.status(404).json({success: false});
+    } catch(err){
+        res.status(400).json({error: err});
+    }
 }
