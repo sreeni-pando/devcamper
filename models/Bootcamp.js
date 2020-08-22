@@ -97,11 +97,20 @@ const BootcampSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
       },
-},{ versionKey: false, timestamps:{ updatedAt: 'updated_at'}}); 
+},{ toJSON: { virtuals: true},
+  toObject: { virtuals: true},
+  versionKey: false, timestamps:{ updatedAt: 'updated_at'}}); 
 
 BootcampSchema.pre('save', function(next){
   this.slug = slugify(this.name, { lower: true} );
   next();
 });
 
+// reverse populate
+BootcampSchema.virtual('courses', {
+  ref: 'courses',
+  localField: '_id',
+  foreignField: 'bootcamp',
+  justOne: false,
+})
 module.exports = mongoose.model('Bootcamp', BootcampSchema);

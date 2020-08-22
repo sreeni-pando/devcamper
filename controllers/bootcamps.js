@@ -15,13 +15,16 @@ exports.getBootcamps = asyncHandler(async (req,res,next) =>{
   removeFields.forEach(param => delete reqQuery[param]);
 
   // Create query string
-  let queryStr = JSON.stringify(reqQuery);
+  let queryStr = JSON.stringify(reqQuery)
 
   // Create operators ($gt, $gte, etc)
   queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
   // Finding resource
-  query = Bootcamp.find(JSON.parse(queryStr));
+  query = Bootcamp.find(JSON.parse(queryStr)).populate({
+    path: 'courses',
+    // select: 'name',
+});;
 
   // Select Fields
   if (req.query.select) {
