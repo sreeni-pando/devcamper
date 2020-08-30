@@ -62,3 +62,45 @@ exports.addCourse = asyncHandler( async (req, res, next) =>{
     })
 
 });
+
+exports.updateCourse = asyncHandler( async (req, res, next) =>{
+    let id = req.params.id;
+    const data = req.body;
+    const course = await Courses.updateOne({ _id: id}, { 
+        $set: {
+            title: data.title,
+            description: data.description,
+            weeks: data.weeks,
+            tuition: data.tuition,
+            minimumSkill: data.minimumSkill,
+        }
+    })
+   
+    if(!course){
+        return next( new ErrorResponse(`Course not found with id ${req.params.id}`, 404));
+    }
+    
+    res.status(200).json({
+        success: true,
+        count: 1,
+        data: course,
+    })
+
+});
+
+exports.deleteCourse = asyncHandler( async (req, res, next) =>{
+    let id = req.params.id;
+    const course = await Courses.findOne({ _id: id})
+   
+    if(!course){
+        return next( new ErrorResponse(`Course not found with id ${req.params.id}`, 404));
+    }
+    await course.remove();
+    
+    res.status(200).json({
+        success: true,
+        count: 1,
+        data: {},
+    })
+
+});
