@@ -11,6 +11,7 @@ dotenv.config({path:'../config/config.env'});
 connectDB();
 const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
+const authentication = require('./routes/auth');
 const app = express();
 
 app.use(express.json());
@@ -25,6 +26,7 @@ app.use(fileupload());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/bootcamps', bootcamps);
 app.use('/api/courses', courses);
+app.use('/api', authentication );
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
