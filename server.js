@@ -4,9 +4,10 @@ const morgan = require('morgan');
 const connectDB = require('./config/db');
 const fileupload = require('express-fileupload');
 const colors = require('colors');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const errorHandler = require('./middleware/error');
-dotenv.config({path:'../config/config.env'});
+dotenv.config({path:'./config/config.env'});
 
 connectDB();
 const bootcamps = require('./routes/bootcamps');
@@ -15,6 +16,8 @@ const authentication = require('./routes/auth');
 const app = express();
 
 app.use(express.json());
+
+app.use(cookieParser());
 
 const logger = require('./middleware/logger');
 

@@ -54,7 +54,7 @@ UserSchema.pre('save', async function(next){
 });
 //sign JWT 
 UserSchema.methods.getSignedJwtToken = function(){
-  return jwt.sign({id:this._id},'asdad121');
+  return jwt.sign({id:this._id},process.env.JWT_SECRET);
 };
 
 UserSchema.methods.matchPassword = async function(password){
