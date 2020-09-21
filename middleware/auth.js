@@ -24,4 +24,13 @@ exports.protect = asyncHandler(async(req, res, next)=>{
     } catch(err){
         return next(new ErrorResponse('error ', 400));
     }
-})
+});
+
+exports.authorize = (...roles) => {
+    return(req, res, next) =>{
+        if(!roles.includes(req.user.role)) {
+            return next(new ErrorResponse(`User role ${req.user.role} not permitted`, 403));
+        }
+        next();
+    }
+}
