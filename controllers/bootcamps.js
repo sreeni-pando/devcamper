@@ -19,7 +19,9 @@ exports.getBootcamp = asyncHandler(async (req,res,next) =>{
     next(new ErrorResponse(`Bootcamp not found with id:${req.params.id}`, 404));
     
 });
-exports.createBootcamp = asyncHandler(async (req,res,next) =>{     
+exports.createBootcamp = asyncHandler(async (req,res,next) =>{  
+    req.body.user = req.user.id;
+    // const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id });   
     const bootcamp = await Bootcamp.create(req.body);
     if(bootcamp){
         res.status(201).json({
@@ -32,12 +34,17 @@ exports.createBootcamp = asyncHandler(async (req,res,next) =>{
     
 });
 exports.updateBootcamp = asyncHandler(async (req,res,next) =>{
-     const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body);
-    if(bootcamp){
-        return res.status(200).json({data: bootcamp});
+     let bootcamp = await Bootcamp.findById(req.params.id);
+    if(!bootcamp){
+        return res.status(404).json({success: false});
     }
-    res.status(404).json({success: false});
-    
+    if(bootcamp.user.toString()!==req.user.id && req.user.role!== 'admin'){
+        return next(new ErrorResponse(`User ${req.params.id} not authorized`, 401));
+    }
+    bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body,{
+        new: true,
+    })
+    return res.status(200).json({data: bootcamp});
 });
 
 exports.deleteBootcamp = asyncHandler(async(req,res,next) =>{
