@@ -11,6 +11,6 @@ router.get('/', advanceResults(Course,{ path: 'bootcamp', select: 'name descript
  ,getCourses);
 router.get('/:id', getCourse);
 router.post('/:bootcampId/create',protect,authorize('admin'), addCourse);
-router.put('/:id', authorize('admin'),updateCourse);
+router.put('/:id', protect, authorize('admin'),updateCourse);
 router.delete('/:id',protect,authorize('admin'), deleteCourse)
 module.exports = router;

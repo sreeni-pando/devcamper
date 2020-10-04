@@ -43,11 +43,15 @@ exports.getCourse = asyncHandler( async (req, res, next) =>{
 
 exports.addCourse = asyncHandler( async (req, res, next) =>{
     req.body.bootcamp = req.params.bootcampId;
-
+    req.body.user = req.user.id;
    const bootcamp = await Bootcamp.findById(req.params.bootcampId);
 
     if(!bootcamp){
         return next( new ErrorResponse(`bootcamp not found with id ${req.params.bootcampId}`, 404));
+    }
+    if(bootcamp.user.toString()!==req.user.id && req.user.role!== 'admin'){
+        return next(new ErrorResponse(`User ${req.params.id} not authorized to add course
+        `, 401));
     }
     const course = await Courses.create(req.body);
     res.status(200).json({
@@ -61,7 +65,7 @@ exports.addCourse = asyncHandler( async (req, res, next) =>{
 exports.updateCourse = asyncHandler( async (req, res, next) =>{
     let id = req.params.id;
     const data = req.body;
-    const course = await Courses.updateOne({ _id: id}, { 
+    let course = await Courses.updateOne({ _id: id}, { 
         $set: {
             title: data.title,
             description: data.description,
@@ -70,9 +74,14 @@ exports.updateCourse = asyncHandler( async (req, res, next) =>{
             minimumSkill: data.minimumSkill,
         }
     })
-   
+    course = await Courses.findOne({_id: id});
     if(!course){
         return next( new ErrorResponse(`Course not found with id ${req.params.id}`, 404));
+    }
+
+    if(course.user.toString()!==req.user.id && req.user.role!== 'admin'){
+        return next(new ErrorResponse(`User ${req.params.id} not authorized to update course
+        `, 401));
     }
     
     res.status(200).json({
@@ -89,6 +98,11 @@ exports.deleteCourse = asyncHandler( async (req, res, next) =>{
    
     if(!course){
         return next( new ErrorResponse(`Course not found with id ${req.params.id}`, 404));
+    }
+
+    if(course.user.toString()!==req.user.id && req.user.role!== 'admin'){
+        return next(new ErrorResponse(`User ${req.params.id} not authorized to delete course
+        `, 401));
     }
     await course.remove();
     
