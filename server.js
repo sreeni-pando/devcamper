@@ -2,9 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
-const fileupload = require('express-fileupload');
-const colors = require('colors');
 const cookieParser = require('cookie-parser');
+const fileupload = require('express-fileupload');
 const path = require('path');
 const errorHandler = require('./middleware/error');
 dotenv.config({path:'./config/config.env'});
@@ -12,6 +11,7 @@ dotenv.config({path:'./config/config.env'});
 connectDB();
 const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
+const reviews = require('./routes/reviews');
 const authentication = require('./routes/auth');
 const app = express();
 
@@ -29,6 +29,7 @@ app.use(fileupload());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/bootcamps', bootcamps);
 app.use('/api/courses', courses);
+app.use('/api/reviews', reviews);
 app.use('/api', authentication );
 app.use(errorHandler);
 

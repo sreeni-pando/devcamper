@@ -3,13 +3,14 @@ const express = require('express');
 const { getBootcamp, getBootcamps, updateBootcamp, deleteBootcamp,
      createBootcamp, bootcampPhotoUpload } = require('../controllers/bootcamps');
 const courseRouter = require('./courses');
+const reviewRouter = require('./reviews')
 const router = express.Router();
 const { protect, authorize } = require('../middleware/auth');
 const Bootcamp = require('../models/Bootcamp');
 const advanceResults = require('../middleware/advanceResults');
 
 router.use('/:bootcampId/courses', courseRouter);
-
+router.use('/:bootcampId/reviews', reviewRouter)
 router.route('/').get(advanceResults(Bootcamp, 'courses'),getBootcamps).post(protect,
      authorize('admin'),createBootcamp);
 
