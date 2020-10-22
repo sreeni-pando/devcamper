@@ -4,6 +4,8 @@ const morgan = require('morgan');
 const connectDB = require('./config/db');
 const cookieParser = require('cookie-parser');
 const fileupload = require('express-fileupload');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
 const path = require('path');
 const errorHandler = require('./middleware/error');
 dotenv.config({path:'./config/config.env'});
@@ -26,6 +28,8 @@ if(process.env.NODE_ENV==='development'){
 }
 app.use(logger);
 app.use(fileupload());
+app.use(helmet());
+app.use(mongoSanitize())
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/bootcamps', bootcamps);
 app.use('/api/courses', courses);
