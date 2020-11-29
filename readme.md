@@ -6,8 +6,8 @@
 
 npm install
 
-#Run App
-#Run in Dev mode
+###Run App
+###Run in Dev mode
 npm run dev
 
-***[Demo markdown API documentation](public/index.md)***
+***[Markdown API documentation](public/index.md)***
