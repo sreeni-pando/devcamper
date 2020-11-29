@@ -10,5 +10,4 @@ npm install
 #Run in Dev mode
 npm run dev
 
-#Run in pord mode
-npm start
+***[Demo markdown API documentation](public/index.md)***
